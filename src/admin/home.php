@@ -15,7 +15,7 @@ Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("{$root}/admin/tpl/");
 $twig = new Twig_Environment($loader, array());
 
-$template = $twig->loadTemplate('home.html'); 
+$template = $twig->loadTemplate('home.html');
 
 /**
  * 
@@ -29,12 +29,18 @@ function insertQuestionaire($details) {
 		$stmt = new tidy_sql($db, "INSERT INTO Questionaires (QuestionaireName, QuestionaireDepartment) VALUES (?,?)", "ss");
 		$stmt->query($details["questionnaireName"], $details["questionnaireDepartment"]);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully added questionnaire");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully added questionnaire" 
+		);
 		
 		return $db->insert_id;
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred adding questionnaire ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred adding questionnaire ({$e->getMessage()})" 
+		);
 	}
 }
 
@@ -54,10 +60,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE Answers FROM Answers INNER JOIN AnswerGroup WHERE AnswerGroup.QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Answers");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Answers" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Answers ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Answers ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -65,10 +77,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM AnswerGroup WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted AnswerGroups");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted AnswerGroups" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting AnswerGroups ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting AnswerGroups ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -76,10 +94,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM Questions WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Questions");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Questions" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Questions ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Questions ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -87,10 +111,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM StaffToModules WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Staff Modules");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Staff Modules" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Staff Modules ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Staff Modules ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -98,10 +128,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM Staff WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Staff");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Staff" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Staff ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Staff ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -109,10 +145,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM StudentsToModules WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Student Modules");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Student Modules" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Student Modules ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Student Modules ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -120,10 +162,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM Students WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Students");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Students" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Students ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Students ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -131,10 +179,16 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM Modules WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Modules");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Modules" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Modules ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Modules ({$e->getMessage()})" 
+		);
 		return;
 	}
 	
@@ -142,14 +196,19 @@ function deleteQuestionaire($questionnaireID) {
 		$stmt = new tidy_sql($db, "DELETE FROM Questionaires WHERE QuestionaireID=?", "i");
 		$stmt->query($questionnaireID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted Questionaire (finally :D)");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted Questionaire (finally :D)" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting Questionaire ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting Questionaire ({$e->getMessage()})" 
+		);
 		return;
 	}
 }
-
 
 /**
  * 
@@ -159,7 +218,7 @@ function deleteQuestionaire($questionnaireID) {
  */
 function getQuestionaires() {
 	global $db;
-
+	
 	$stmt = new tidy_sql($db, "
 		SELECT *, (
 				SELECT COUNT(*)
@@ -176,9 +235,9 @@ function getQuestionaires() {
 	$rows = $stmt->query();
 	
 	foreach ($rows as &$questionnaire) {
-		$questionnaire["Percent"] = $questionnaire["Total"]==0?0:($questionnaire["Answers"]/$questionnaire["Total"])*100;
+		$questionnaire["Percent"] = $questionnaire["Total"] == 0 ? 0 : ($questionnaire["Answers"] / $questionnaire["Total"]) * 100;
 	}
-
+	
 	return $rows;
 }
 
@@ -188,9 +247,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["action"])) {
 	$action = $_POST["action"];
 	if ($action == "add_questionnaire") {
 		$id = insertQuestionaire($_POST);
-		//todo: add a redirect, or let user manually go into modify?
+		// todo: add a redirect, or let user manually go into modify?
 	}
-	if ($action == "table") { //a button within table was clicked
+	if ($action == "table") { // a button within table was clicked
 		if (isset($_POST["delete"])) {
 			deleteQuestionaire($_POST["delete"]);
 		}
@@ -200,6 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["action"])) {
 $questionnaires = getQuestionaires();
 
 echo $template->render(array(
-	"url"=>$url,"alerts"=>$alerts,
-	"questionnaires"=>$questionnaires
+	"url" => $url,
+	"alerts" => $alerts,
+	"questionnaires" => $questionnaires 
 ));

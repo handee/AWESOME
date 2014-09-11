@@ -30,13 +30,18 @@ function insertGroup($details) {
 		$stmt = new tidy_sql($db, "INSERT INTO Modules (QuestionaireID, ModuleID, ModuleTitle, Fake) VALUES (?,?,?,1)", "iss");
 		$stmt->query($questionnaireID, $details["ModuleID"], $details["ModuleTitle"]);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully added question group");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully added question group" 
+		);
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred adding question group ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred adding question group ({$e->getMessage()})" 
+		);
 	}
 }
-
 
 /**
  * delete question group
@@ -49,23 +54,34 @@ function deleteGroup($moduleID) {
 		$stmt = new tidy_sql($db, "DELETE FROM Questions WHERE QuestionaireID=? AND ModuleID=?", "is");
 		$stmt->query($questionnaireID, $moduleID);
 		
-		$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted modules questions");
+		$alerts[] = array(
+			"type" => "success",
+			"message" => "Sucessfully deleted modules questions" 
+		);
 		
 		try {
 			$stmt = new tidy_sql($db, "DELETE FROM Modules WHERE QuestionaireID=? AND ModuleID=?", "is");
 			$stmt->query($questionnaireID, $moduleID);
 			
-			$alerts[] = array("type"=>"success",  "message"=>"Sucessfully deleted the module");
+			$alerts[] = array(
+				"type" => "success",
+				"message" => "Sucessfully deleted the module" 
+			);
 		}
 		catch (Exception $e) {
-			$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting the module ({$e->getMessage()})");
+			$alerts[] = array(
+				"type" => "danger",
+				"message" => "Sorry, an error occurred deleting the module ({$e->getMessage()})" 
+			);
 		}
 	}
 	catch (Exception $e) {
-		$alerts[] = array("type"=>"danger",  "message"=>"Sorry, an error occurred deleting the modules questions ({$e->getMessage()})");
+		$alerts[] = array(
+			"type" => "danger",
+			"message" => "Sorry, an error occurred deleting the modules questions ({$e->getMessage()})" 
+		);
 	}
 }
-
 
 /**
  * Lists questiongroups from db
@@ -80,7 +96,10 @@ function getModules($questionnaireID) {
 	$groups = $stmt->query($questionnaireID, 1);
 	$modules = $stmt->query($questionnaireID, 0);
 	
-	return array($groups, $modules);
+	return array(
+		$groups,
+		$modules 
+	);
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["action"])) {
@@ -88,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["action"])) {
 	if ($action == "add_group") {
 		insertGroup($_POST);
 	}
-	if ($action == "table") { //a button within table was clicked
+	if ($action == "table") { // a button within table was clicked
 		if (isset($_POST["delete"])) {
 			deleteGroup($_POST["delete"]);
 		}
@@ -98,9 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["action"])) {
 list($groups, $modules) = getModules($questionnaireID);
 
 echo $template->render(array(
-	"url"=>$url, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts,
-	"groups"=>$groups,
-	"modules"=>$modules
+	"url" => $url,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts,
+	"groups" => $groups,
+	"modules" => $modules 
 ));
 
 

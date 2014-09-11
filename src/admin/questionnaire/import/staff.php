@@ -10,7 +10,6 @@
 require "../../../lib.php";
 require_once "{$root}/lib/Twig/Autoloader.php";
 
-
 /**
  * Parse CSV data into an array.
  * 
@@ -19,21 +18,20 @@ require_once "{$root}/lib/Twig/Autoloader.php";
  * @returns list of parsed staff: (UserID, Name)
  */
 function parseStaffCSV($data) {
-	$lines = explode("\n",$data);
+	$lines = explode("\n", $data);
 	$staff = array();
-	foreach($lines as $line) {
+	foreach ($lines as $line) {
 		$csv = str_getcsv($line);
 		if (count($csv) < 2)
 			continue;
-			
+		
 		$staff[] = array(
-			"UserID"=>strtolower($csv[0]),
-			"Name"=>$csv[1]
+			"UserID" => strtolower($csv[0]),
+			"Name" => $csv[1] 
 		);
 	}
 	return $staff;
 }
-
 
 /**
  * 
@@ -45,7 +43,7 @@ function parseStaffCSV($data) {
 function insertStaff($stafflist, $questionnaireID) {
 	global $db;
 	$dbsmodule = new tidy_sql($db, "REPLACE INTO Staff (UserID, Name, QuestionaireID) VALUES (?, ?, ?)", "ssi");
-	foreach($stafflist as $staff) {
+	foreach ($stafflist as $staff) {
 		$dbsmodule->query($staff["UserID"], $staff["Name"], $questionnaireID);
 	}
 }
@@ -63,7 +61,6 @@ function getStaff($questionnaireID) {
 	return $stmt->query($questionnaireID);
 }
 
-
 Twig_Autoloader::register();
 $loader = new Twig_Loader_Filesystem("{$root}/admin/tpl/");
 $twig = new Twig_Environment($loader, array());
@@ -73,16 +70,20 @@ $template = $twig->loadTemplate('questionnaire/import/staff.html');
 $questionnaireID = $_GET["questionnaireID"];
 $alerts = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		$data = parseStaffCSV($_POST["csvdata"]);
-		insertStaff($data, $questionnaireID);
-		$alerts[] = array("type"=>"success", "message"=>"Staff inserted");
+	$data = parseStaffCSV($_POST["csvdata"]);
+	insertStaff($data, $questionnaireID);
+	$alerts[] = array(
+		"type" => "success",
+		"message" => "Staff inserted" 
+	);
 }
 $staff = getStaff($questionnaireID);
 
-
-
 echo $template->render(array(
-	"staff"=>$staff, "url"=>$url, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts
+	"staff" => $staff,
+	"url" => $url,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts 
 ));
 
 

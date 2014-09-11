@@ -19,7 +19,6 @@ $template = $twig->loadTemplate('questionnaire/results/modules.html');
 $questionnaireID = $_GET["questionnaireID"];
 $alerts = array();
 
-
 /**
  * Retrieves list of modules from database
  * 
@@ -50,7 +49,7 @@ function getModulesList($questionnaireID) {
 	GROUP BY Modules.ModuleID
 	ORDER BY Modules.Fake DESC,NumAnswers/TotalStudents DESC,NumAnswers DESC
 		", "i");
-		
+	
 	$modules = $stmt->query($questionnaireID);
 	return $modules;
 }
@@ -74,7 +73,9 @@ $modules = getModulesList($questionnaireID);
 $totalstudents = getTotalQuestionnaireStudents($questionnaireID);
 
 echo $template->render(array(
-	"url"=>$url, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts,
-	"totalstudents"=>$totalstudents,
-	"modules"=>$modules
+	"url" => $url,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts,
+	"totalstudents" => $totalstudents,
+	"modules" => $modules 
 ));

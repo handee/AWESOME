@@ -7,7 +7,7 @@
  * 	
  * Versioning for the database, update the database to newer formats.
  */
- 
+
 include "lib.php";
 
 $stmt = new tidy_sql($db, "SELECT `value` FROM Config WHERE `key`='version'");
@@ -41,8 +41,7 @@ if ($version == 1) {
 		ALTER TABLE `Questions`
 		ADD `QuestionaireID` int NULL,
 		ADD `ModuleID` varchar(10) COLLATE 'utf8_general_ci' NULL AFTER `QuestionaireID`,
-		COMMENT='';"
-	);
+		COMMENT='';");
 	$stmt->query();
 	
 	$version = 2;

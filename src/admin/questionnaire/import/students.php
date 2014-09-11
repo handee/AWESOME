@@ -10,7 +10,6 @@
 require "../../../lib.php";
 require_once "{$root}/lib/Twig/Autoloader.php";
 
-
 /**
  * Parse CSV data into an array.
  * 
@@ -19,20 +18,20 @@ require_once "{$root}/lib/Twig/Autoloader.php";
  * @returns list of parsed students (UserID, Department, Year, Modules array)
  */
 function parseStudentsCSV($data) {
-	$lines = explode("\n",$data);
+	$lines = explode("\n", $data);
 	$students = array();
-	foreach($lines as $line) {
+	foreach ($lines as $line) {
 		$line = rtrim($line, ", \r\n");
-
+		
 		$csv = str_getcsv($line);
 		if (count($csv) < 3)
 			continue;
-			
+		
 		$students[] = array(
 			"UserID" => strtolower($csv[0]),
 			"Department" => $csv[1],
-			"Year"=>$csv[2],
-			"Modules" => array_map('strtoupper',array_slice($csv, 3))
+			"Year" => $csv[2],
+			"Modules" => array_map('strtoupper', array_slice($csv, 3)) 
 		);
 	}
 	
@@ -42,7 +41,6 @@ function parseStudentsCSV($data) {
 	
 	return $students;
 }
-
 
 /**
  * 
@@ -58,13 +56,13 @@ function insertStudents($students, $questionnaireID) {
 	foreach ($students as $student) {
 		$token = bin2hex(openssl_random_pseudo_bytes(16));
 		$done = false;
-
+		
 		$dbstudent->query($student["UserID"], $student["Department"], $questionnaireID, $token, $done);
 		
-		foreach($student["Modules"] as $module) {
+		foreach ($student["Modules"] as $module) {
 			$dbmodules->query($student["UserID"], $module, $questionnaireID);
 		}
-
+	
 	}
 }
 
@@ -100,11 +98,18 @@ $alerts = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$data = parseStudentsCSV($_POST["csvdata"]);
 	insertStudents($data, $questionnaireID);
-	$alerts[] = array("type"=>"success", "message"=>"Students inserted");
+	$alerts[] = array(
+		"type" => "success",
+		"message" => "Students inserted" 
+	);
 }
-
 
 $students = getStudents($questionnaireID);
 
-echo $template->render(array("url"=>$url, "students"=>$students, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts));
+echo $template->render(array(
+	"url" => $url,
+	"students" => $students,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts 
+));
 

@@ -43,9 +43,17 @@ $alerts = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$data = parseStudentsCSV($_POST["csvdata"]);
 	insertStudents($data, $questionnaireID);
-	$alerts[] = array("type"=>"success", "message"=>"Students inserted");
+	$alerts[] = array(
+		"type" => "success",
+		"message" => "Students inserted" 
+	);
 }
 
 $students = getStudents($questionnaireID);
-echo $template->render(array("url"=>$url, "students"=>$students, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts));
+echo $template->render(array(
+	"url" => $url,
+	"students" => $students,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts 
+));
 

@@ -18,16 +18,16 @@ require_once "{$root}/lib/Twig/Autoloader.php";
  * @returns list of parsed modules: (ModuleID, Title)
  */
 function parseModulesCSV($data) {
-	$lines = explode("\n",$data);
+	$lines = explode("\n", $data);
 	$modules = array();
-	foreach($lines as $line) {
+	foreach ($lines as $line) {
 		$csv = str_getcsv($line);
 		if (count($csv) < 2)
 			continue;
-			
+		
 		$modules[] = array(
-			"ModuleID"=>strtolower($csv[0]),
-			"ModuleTitle"=>$csv[1]
+			"ModuleID" => strtolower($csv[0]),
+			"ModuleTitle" => $csv[1] 
 		);
 	}
 	return $modules;
@@ -44,11 +44,10 @@ function insertModules($modules, $questionnaireID) {
 	global $db;
 	$dbmodule = new tidy_sql($db, "
 REPLACE INTO Modules (ModuleID, QuestionaireID, ModuleTitle) VALUES (?, ?, ?)", "sis");
-	foreach($modules as $module) {
+	foreach ($modules as $module) {
 		$dbmodule->query($module["ModuleID"], $questionnaireID, $module["ModuleTitle"]);
 	}
 }
-
 
 /**
  * Get module list from database
@@ -76,14 +75,19 @@ $alerts = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	$data = parseModulesCSV($_POST["csvdata"]);
 	insertModules($data, $questionnaireID);
-	$alerts[] = array("type"=>"success", "message"=>"Modules inserted");
+	$alerts[] = array(
+		"type" => "success",
+		"message" => "Modules inserted" 
+	);
 }
 
 $modules = getModules($questionnaireID);
 
 echo $template->render(array(
-	"url"=>$url, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts,
-	"modules"=>$modules
+	"url" => $url,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts,
+	"modules" => $modules 
 ));
 
 

@@ -19,7 +19,6 @@ $template = $twig->loadTemplate('questionnaire/import/problems.html');
 $questionnaireID = $_GET["questionnaireID"];
 $alerts = array();
 
-
 /**
  * Get list of modules with students enrolled, with missing definitions
  * 
@@ -39,7 +38,6 @@ GROUP BY StudentsToModules.ModuleID", "i");
 	$results = $stmt->query($questionnaireID);
 	return $results;
 }
-
 
 /**
  * Get list of modules with staff, with missing names
@@ -85,8 +83,10 @@ $missingstaff = getMissingStaff($questionnaireID);
 $studentsWOModules = getStudentsWOModules($questionnaireID);
 
 echo $template->render(array(
-	"url"=>$url, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts,
-	"missingmodules"=>$missingmodules,
-	"missingstaff"=>$missingstaff,
-	"studentswomodules"=>$studentsWOModules
+	"url" => $url,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts,
+	"missingmodules" => $missingmodules,
+	"missingstaff" => $missingstaff,
+	"studentswomodules" => $studentsWOModules 
 )); 

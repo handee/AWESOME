@@ -12,22 +12,22 @@
  *  - tidy_sql class which abstracts mysqli's prepared statements.
  *       Prepared statements are used as it reduces the likelyhood of
  *       exploits down to 0, as no data is being concatenated to the query at all
- */ 
+ */
 
-//initialise db connection
+// initialise db connection
 require "db.php";
 if ($db->connect_errno)
 	throw new Exception("Failed to connect");
-
-///stores benchmark data after page load
-$benchmark = (object)array(
+	
+	// /stores benchmark data after page load
+$benchmark = (object) array(
 	"db_preparetime" => 0,
 	"db_querytime" => 0,
 	"db_numqueries" => 0,
-	"db_numresults" => 0,
+	"db_numresults" => 0 
 );
 
-///stores the time page started loading
+// /stores the time page started loading
 $start = microtime(true);
 
 register_shutdown_function('output_timer');
@@ -71,17 +71,16 @@ register_shutdown_function('output_timer');
  */
 function output_timer() {
 	global $start, $benchmark;
-	$benchmark->total_time = microtime(true)-$start;
-	$benchmark->db_time = $benchmark->db_preparetime+$benchmark->db_querytime;
+	$benchmark->total_time = microtime(true) - $start;
+	$benchmark->db_time = $benchmark->db_preparetime + $benchmark->db_querytime;
 	$benchmark->php_time = $benchmark->total_time - $benchmark->db_time;
-	$benchmark->php_percent = ($benchmark->php_time/$benchmark->total_time)*100;
-	$benchmark->db_percent = ($benchmark->db_time/$benchmark->total_time)*100;
+	$benchmark->php_percent = ($benchmark->php_time / $benchmark->total_time) * 100;
+	$benchmark->db_percent = ($benchmark->db_time / $benchmark->total_time) * 100;
 	echo "<!-- Benchmark/stats ;) times are in seconds\n";
 	print_r($benchmark);
-	echo "mysqlnd enabled: " . (function_exists('mysqli_stmt_get_result')?"true":"false") ."\n";
+	echo "mysqlnd enabled: " . (function_exists('mysqli_stmt_get_result') ? "true" : "false") . "\n";
 	echo "-->";
 }
-
 
 /**
  * A mysqli prepared statements wrapper, makes mysqli prepared statements easier to use
@@ -91,7 +90,6 @@ class tidy_sql {
 	private $db;
 	private $types;
 	private $stmt;
-	
 	
 	/**
 	 * Constructor, prepares the query
@@ -109,10 +107,10 @@ class tidy_sql {
 		
 		$s = microtime(true);
 		$result = $this->stmt = $db->prepare($query);
-		$benchmark->db_preparetime += microtime(true)-$s;
+		$benchmark->db_preparetime += microtime(true) - $s;
 		
 		if (!$result) {
-			throw new Exception("SQL prepare: ".strval($db->errno)." - ".$db->error);
+			throw new Exception("SQL prepare: " . strval($db->errno) . " - " . $db->error);
 		}
 	}
 	
@@ -126,24 +124,29 @@ class tidy_sql {
 	public function query() {
 		global $benchmark;
 		$s = microtime(true);
-		$benchmark->db_numqueries ++;
+		$benchmark->db_numqueries++;
 		
 		$args = func_get_args();
 		if (count($args) > 0) {
-			//param args, bind_param works by reference
-			//	so we create a 2nd array consisting of just pointers to the first
+			// param args, bind_param works by reference
+			// so we create a 2nd array consisting of just pointers to the first
 			$pargs = array();
-			foreach($args as &$arg) { $pargs[] = &$arg; }
-			array_unshift($pargs,$this->types);
-			call_user_func_array(array($this->stmt, "bind_param"),$pargs);
+			foreach ($args as &$arg) {
+				$pargs[] = &$arg;
+			}
+			array_unshift($pargs, $this->types);
+			call_user_func_array(array(
+				$this->stmt,
+				"bind_param" 
+			), $pargs);
 		}
 		
 		$exec = $this->stmt->execute();
 		
-		$benchmark->db_querytime += microtime(true)-$s;
+		$benchmark->db_querytime += microtime(true) - $s;
 		
 		if ($this->stmt->errno != 0) {
-			$message = "SQL Execute: ".strval($this->stmt->errno)." - ".$this->stmt->error;
+			$message = "SQL Execute: " . strval($this->stmt->errno) . " - " . $this->stmt->error;
 			$this->stmt->reset();
 			throw new Exception($message);
 		}
@@ -158,15 +161,8 @@ class tidy_sql {
 		}
 	}
 	
-	/* This is only used within the query() func.
-	 * 
-	 * Retrieves all rows for the current query, with the inner array indexed by key
-	 * 
-	 * The function uses mysqlnd (mysql native driver) if available,
-	 *   if not, it falls back to a hack that retrieves the column names
-	 *   and retrieves the whole row by index and maps the two together
-	 * 
-	 * @returns Returns a multidimensional array containing the results. First array is the row, inner array is indexed by the column names.
+	/*
+	 * This is only used within the query() func. Retrieves all rows for the current query, with the inner array indexed by key The function uses mysqlnd (mysql native driver) if available, if not, it falls back to a hack that retrieves the column names and retrieves the whole row by index and maps the two together @returns Returns a multidimensional array containing the results. First array is the row, inner array is indexed by the column names.
 	 */
 	private function getRows() {
 		global $benchmark;
@@ -182,26 +178,27 @@ class tidy_sql {
 			$output = $rows;
 		}
 		
-		else { //mysqlnd not being used, error prone :(
+		else { // mysqlnd not being used, error prone :(
 			$meta = $this->stmt->result_metadata();
-			while ($field = $meta->fetch_field())
-			{
+			while ($field = $meta->fetch_field()) {
 				$params[] = &$row[$field->name];
 			}
-
-			call_user_func_array(array($this->stmt, 'bind_result'), $params);
-
+			
+			call_user_func_array(array(
+				$this->stmt,
+				'bind_result' 
+			), $params);
+			
 			while ($this->stmt->fetch()) {
-				foreach($row as $key => $val)
-				{
+				foreach ($row as $key => $val) {
 					$c[$key] = $val;
 				}
 				$result[] = $c;
 			}
-			$output = isset($result)?$result:array();
+			$output = isset($result) ? $result : array();
 		}
 		
-		$benchmark->db_querytime += microtime(true)-$s;
+		$benchmark->db_querytime += microtime(true) - $s;
 		$benchmark->db_numresults += count($output);
 		return $output;
 	}

@@ -21,5 +21,7 @@ $questionnaireID = $_GET["questionnaireID"];
 $alerts = array();
 
 echo $template->render(array(
-	"url"=>$url, "questionnaireID"=> $questionnaireID, "alerts"=>$alerts,
+	"url" => $url,
+	"questionnaireID" => $questionnaireID,
+	"alerts" => $alerts 
 ));
